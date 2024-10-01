@@ -51,15 +51,15 @@ class AuthController extends Controller
 
             if($validateUser->fails()){
                 return response()->json([
-                    'staus'=>false,
-                    'message'=>'validate user',
-                    'error'=>$validateUser->errors()->all()
+                    'status'=>false,
+                    'message'=>'validation error',
+                    'errors'=> $validateUser->errors()->all()
                 ],401);
             }
 
             $user = User::create([
                 'name'=>$request->name,
-                'email'=>$request->email,
+                'email'=> $request->email,
                 'password'=>$request->password
             ]);
 
@@ -68,7 +68,6 @@ class AuthController extends Controller
                 'message'=>'User register successfully',
                 'user'=>$user
             ],200);
-
     }
 
     public function login(Request $request){
@@ -107,40 +106,48 @@ class AuthController extends Controller
         //         ],401);
         //     }
 
-        $validateUser = Validator::make(
-            $request->all(),
-            [
-                'email'=>'required|email',
-                'password'=>'required'
-            ]
-            );
+       $validateUser = Validator::make(
+        $request->all(),
+        [
+            'email'=>'required|email',
+            'password'=>'required'
+        ]
+        );
 
-            if($validateUser->fails()){
-                return response()->json([
-                    'status'=>false,
-                    'message'=>'Authentication Fail',
-                    'eroor'=>$validateUser->errors()->all()
-                ],401);
-            }
+        if($validateUser->fails()){
+            return response()->json([
+                'status'=>false,
+                'message'=>'Validate fail',
+                'error'=>$validateUser->errors()->all()
+            ],401);
+        }
 
-            if(Auth::attempt(['email'=>$request->email , 'password'=>$request->password])){
-                $authUser = Auth::user();
+        if(Auth::attempt(['email'=>$request->email , 'password'=>$request->password])){
+            $authUser = Auth::user();
 
-                return response()->json([
-                    'status'=>true,
-                    'message'=>'User login successful',
-                    'token'=>$authUser->createToken('Api token')->plainTextToken,
-                    'token_type'=> 'bearer'
-                ],200);
-            }else{
-                return response()->json([
-                    'status'=>true,
-                    'message'=>'Email and password does not match'
-                ],401);
-            }
+            return response()->json([
+                'status'=>true,
+                'message'=>'User login successfully',
+                'token'=> $authUser->createToken('Api token')->plainTextToken,
+                'token_type'=>'bearer'
+            ]);
+        }else{
+            return response()->json([
+                'status'=>false,
+                'message'=>'Email and password does not match'
+            ],401);
+        }
     }
 
     public function logout(Request $request){
+        // $user=$request->user();
+        // $user->tokens()->delete();
+
+        // return response()->json([
+        //     'status'=>true,
+        //     'message'=>'User looged out successfully'
+        // ],200);
+
         $user=$request->user();
         $user->tokens()->delete();
 
@@ -148,5 +155,6 @@ class AuthController extends Controller
             'status'=>true,
             'message'=>'User looged out successfully'
         ],200);
+
     }
 }

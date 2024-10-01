@@ -23,15 +23,11 @@ class PostController extends Basecontroller
         //     'data'=>$data
         // ],200);
 
+        // return $this->sendResponse($data,'All post data');
+
         $data = Post::all();
 
-        // return response()->json([
-        //     'status'=>true,
-        //     'message'=>'All post data',
-        //     'data'=>$data
-        // ],200);
-
-        return $this->sendResponse($data,'All post data');
+        return $this->sendResponse($data , 'All Post Data');
     }
 
     /**
@@ -39,6 +35,44 @@ class PostController extends Basecontroller
      */
     public function store(Request $request)
     {
+        // $validatePost = Validator::make(
+        //     $request->all(),
+        //     [
+        //         'title'=>'required',
+        //         'description'=>'required',
+        //         'image'=>'required|mimes:png,jpg,jpeg,gif'
+        //     ]
+        //     );
+
+        // if($validatePost->fails()){
+        //     // return response()->json([
+        //     //     'status'=>false,
+        //     //     'message'=>'validation error',
+        //     //     'errors'=>$validatePost->errors()->all()
+        //     // ],401);
+
+        //     return $this->sendError('validation error' , $validatePost->errors()->all());
+
+        // }
+
+
+        // $img = $request->image;
+        // $ext = $img->getClientOriginalExtension();
+        // $imageName = time().'.'.$ext;
+        // $img->move(public_path().'/uploads',$imageName);
+
+        // $post= Post::create([
+        //     'title'=>$request->title,
+        //     'description'=>$request->description,
+        //     'image'=>$imageName
+        // ]);
+
+        // return response()->json([
+        //     'status'=>true,
+        //     'message'=>'Post created successfully',
+        //     'post'=>$post
+        // ],200);
+
         $validatePost = Validator::make(
             $request->all(),
             [
@@ -48,34 +82,23 @@ class PostController extends Basecontroller
             ]
             );
 
-        if($validatePost->fails()){
-            // return response()->json([
-            //     'status'=>false,
-            //     'message'=>'validation error',
-            //     'errors'=>$validatePost->errors()->all()
-            // ],401);
+            if($validatePost->fails()){
+                return $this->sendError('validation error' , $validatePost->errors()->all());
+            }
 
-            return $this->sendError('validation error' , $validatePost->errors()->all());
-
-        }
+            $img = $request->image;
+            $ext = $img->getClientOriginalExtension();
+            $imageName = time().'.'.$ext;
+            $img->move(public_path().'/uploads',$imageName);
 
 
-        $img = $request->image;
-        $ext = $img->getClientOriginalExtension();
-        $imageName = time().'.'.$ext;
-        $img->move(public_path().'/uploads',$imageName);
+            $post = Post::create([
+                'title'=>$request->title,
+                'description'=>$request->description,
+                'image'=>$imageName
+            ]);
 
-        $post= Post::create([
-            'title'=>$request->title,
-            'description'=>$request->description,
-            'image'=>$imageName
-        ]);
-
-        return response()->json([
-            'status'=>true,
-            'message'=>'Post created successfully',
-            'post'=>$post
-        ],200);
+            return $this->sendResponse($post , 'Post created successfully');
     }
 
     /**
@@ -83,13 +106,17 @@ class PostController extends Basecontroller
      */
     public function show(string $id)
     {
+        // $data = Post::select('id' , 'title' , 'description' , 'image')->where(['id'=>$id])->get();
+
+        // return response()->json([
+        //     'status'=>true,
+        //     'message'=>'your single post',
+        //     'data'=>$data
+        // ],200);
+
         $data = Post::select('id' , 'title' , 'description' , 'image')->where(['id'=>$id])->get();
 
-        return response()->json([
-            'status'=>true,
-            'message'=>'your single post',
-            'data'=>$data
-        ],200);
+        return $this->sendResponse($data , 'your single post');
     }
 
     /**
