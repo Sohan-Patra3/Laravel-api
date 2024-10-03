@@ -28,10 +28,37 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     <script>
+        // $(document).ready(function() {
+        //     $('#loginButton').on('click', function() {
+        //         let email = $('#email').val();
+        //         let password = $('#password').val();
+
+        //         $.ajax({
+        //             url: '/api/login',
+        //             type: 'POST',
+        //             contentType: 'application/json',
+        //             data: JSON.stringify({
+        //                 email: email,
+        //                 password: password
+        //             }),
+        //             success: function(response) {
+        //                 console.log(response);
+
+        //                 localStorage.setItem('api_token', response.token);
+
+        //                 window.location.href = '/allposts'
+        //             },
+        //             error: function(xhr, status, error) {
+        //                 console.log('Error' + xhr.responseText);
+        //             }
+        //         })
+        //     })
+        // })
+
         $(document).ready(function() {
             $('#loginButton').on('click', function() {
-                let email = $('#email').val();
-                let password = $('#password').val();
+                let email = $('#email').val()
+                let password = $('#password').val()
 
                 $.ajax({
                     url: '/api/login',
@@ -43,9 +70,7 @@
                     }),
                     success: function(response) {
                         console.log(response);
-
-                        localStorage.setItem('api_token', response.token);
-
+                        localStorage.setItem('api_token', response.token)
                         window.location.href = '/allposts'
                     },
                     error: function(xhr, status, error) {
