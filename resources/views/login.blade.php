@@ -70,11 +70,11 @@
                     }),
                     success: function(response) {
                         console.log(response);
-                        localStorage.setItem('api_token', response.token);
+                        localStorage.setItem('api_token', response.token)
                         window.location.href = '/allposts'
                     },
                     error: function(xhr, status, error) {
-                        alert('Error' + xhr.responseText)
+                        console.log(xhr.responseText);
                     }
                 })
             })

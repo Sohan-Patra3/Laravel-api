@@ -82,9 +82,9 @@
 
             fetch('/api/logout', {
                     method: 'POST',
-                    headers: { // Corrected from 'header' to 'headers'
-                        'Authorization': `Bearer ${token}`, // Capitalized 'Bearer' as well
-                        'Content-Type': 'application/json' // Optional but recommended for POST requests
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     }
                 })
                 .then(response => response.json())
@@ -114,31 +114,31 @@
                     const postContainer = document.querySelector('#postContainer')
 
                     let tableData = `
-                <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Description</th>
+            <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Description</th>
 
-                <th>Actions</th>
-            </tr>
-        </thead>`
+            <th>Actions</th>
+        </tr>
+    </thead>`
 
                     allpost.forEach(post => {
                         tableData += `
-                    <tr>
-                <td><img src="/uploads/${post.image}" alt="Image" class="img-thumbnail" width="100">
-                </td>
-                <td>${post.title}</td>
-                <td>${post.description}</td>
-                <td>
-                    <a href="#" class="btn btn-primary btn-sm" data-bs-post="${post.id}" data-bs-toggle="modal" data-bs-target="#singlePostModal">View</a>
-                    <a href="#" class="btn btn-warning btn-sm"  data-bs-update="${post.id}"  data-bs-toggle="modal" data-bs-target="#updatePostModal">Update</a>
-                    <a href="#" onclick="deletePost(${post.id})"  class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-                    `
+                <tr>
+            <td><img src="/uploads/${post.image}" alt="Image" class="img-thumbnail" width="100">
+            </td>
+            <td>${post.title}</td>
+            <td>${post.description}</td>
+            <td>
+                <a href="#" class="btn btn-primary btn-sm" data-bs-post="${post.id}" data-bs-toggle="modal" data-bs-target="#singlePostModal">View</a>
+                <a href="#" class="btn btn-warning btn-sm"  data-bs-update="${post.id}"  data-bs-toggle="modal" data-bs-target="#updatePostModal">Update</a>
+                <a href="#" onclick="deletePost(${post.id})"  class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+                `
                     });
 
 
@@ -151,7 +151,6 @@
                 });
         }
         loadData()
-
 
 
         // Open single post modal
@@ -176,23 +175,24 @@
                     .then(response => response.json())
                     .then(data => {
 
-
                         const post = data.data[0]
 
                         const modalBody = document.querySelector('#singlePostModal .modal-body')
 
                         modalBody.innerHTML = "";
                         modalBody.innerHTML = `
-                    Title : ${post.title}
-                    <br>
-                    Description : ${post.description}
-                    <br>
-                    <img width="150px" src="/uploads/${post.image}"/>
-                    `
+    Title : ${post.title}
+    <br>
+    Description : ${post.description}
+    <br>
+    <img width="150px" src="/uploads/${post.image}"/>
+                `
                     })
             })
         }
 
+
+        //update modal
         let updateModal = document.querySelector('#updatePostModal')
 
         if (updateModal) {
@@ -203,20 +203,17 @@
 
                 const token = localStorage.getItem('api_token')
 
-
                 fetch(`/api/posts/${id}`, {
-                        method: 'GET',
+                        type: 'POST',
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         }
-                    })
-                    .then(response => response.json())
+                    }).then(response => response.json())
                     .then(data => {
-                        console.log(data.data);
+                        console.log(data);
 
-                        const post = data.data[0]
-                        console.log(post);
+                        let post = data.data[0]
 
                         document.getElementById('postId').value = post.id
                         document.getElementById('postTitle').value = post.title
@@ -267,20 +264,39 @@
         }
 
         //delete post
+        // async function deletePost(postId) {
+        //     let token = localStorage.getItem('api_token')
+        //     console.log(postId);
+
+        //     let response = await fetch(`/api/posts/${postId}`, {
+        //             method: 'DELETE',
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`,
+        //             }
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log(data);
+        //             // window.location.href = "/allposts";
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //         });
+        // }
+
         async function deletePost(postId) {
-            let token = localStorage.getItem('api_token')
+            const token = localStorage.getItem('api_token')
             console.log(postId);
 
-            let response = await fetch(`/api/posts/${postId}`, {
+            await fetch(`/api/posts/${postId}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     }
-                })
-                .then(response => response.json())
+                }).then(response => response.json())
                 .then(data => {
-                    console.log(data);
-                    // window.location.href = "/allposts";
+                    console.log(data); 
+                    window.location.href = "/allposts";
                 })
                 .catch(error => {
                     console.error('Error:', error);

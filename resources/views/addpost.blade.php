@@ -33,8 +33,39 @@
     <script>
         let addForm = document.getElementById('addForm')
 
+        // addForm.onsubmit = async (e) => {
+        //     e.preventDefault();
+
+        //     const token = localStorage.getItem('api_token');
+
+        //     let title = document.getElementById('title').value
+        //     let description = document.getElementById('description').value
+        //     let image = document.getElementById('image').files[0]
+
+        //     let formData = new FormData();
+        //     formData.append('title', title)
+        //     formData.append('description', description)
+        //     formData.append('image', image)
+
+        //     let response = await fetch('/api/posts', {
+        //             method: 'POST',
+        //             body: formData,
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`,
+        //             }
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log(data);
+        //             window.location.href = "/allposts";
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //         });
+        // }
+
         addForm.onsubmit = async (e) => {
-            e.preventDefault();
+            e.preventDefault()
 
             const token = localStorage.getItem('api_token');
 
@@ -42,26 +73,23 @@
             let description = document.getElementById('description').value
             let image = document.getElementById('image').files[0]
 
-            let formData = new FormData();
+            let formData = new FormData()
+
             formData.append('title', title)
             formData.append('description', description)
             formData.append('image', image)
 
-            let response = await fetch('/api/posts', {
+            await fetch('/api/posts', {
                     method: 'POST',
                     body: formData,
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     }
-                })
-                .then(response => response.json())
+                }).then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    window.location.href = "/allposts";
+                    window.location.href = '/allposts'
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
         }
     </script>
 </body>
